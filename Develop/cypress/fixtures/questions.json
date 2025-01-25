@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "1",
+    "question": "What is React?",
+    "answers": [
+      { "text": "A library", "isCorrect": true },
+      { "text": "A framework", "isCorrect": false }
+    ]
+  },
+  {
+    "_id": "2",
+    "question": "What is Node.js?",
+    "answers": [
+      { "text": "A runtime", "isCorrect": true },
+      { "text": "A database", "isCorrect": false }
+    ]
+  },
+  {
+    "_id": "3",
+    "question": "What is TypeScript?",
+    "answers": [
+      { "text": "A superset of JavaScript", "isCorrect": true },
+      { "text": "A CSS framework", "isCorrect": false }
+    ]
+  }
+]

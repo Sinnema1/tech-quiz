@@ -9,12 +9,15 @@ export default defineConfig({
       viteConfig: customViteConfig,
     },
     specPattern: "cypress/component/**/*.cy.{js,ts,jsx,tsx}",
+    supportFile: "cypress/support/components.ts",
   },
 
   e2e: {
     baseUrl: 'http://localhost:3000',
+    specPattern: "cypress/e2e/**/*.cy.{js,ts,jsx,tsx}", 
+    supportFile: "cypress/support/e2e.ts",
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+      // Implement node event listeners here
     },
   },
 });

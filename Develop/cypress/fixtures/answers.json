@@ -1,0 +1,8 @@
+[
+    { "questionId": "1", "text": "A library", "isCorrect": true },
+    { "questionId": "1", "text": "A framework", "isCorrect": false },
+    { "questionId": "2", "text": "A runtime", "isCorrect": true },
+    { "questionId": "2", "text": "A database", "isCorrect": false },
+    { "questionId": "3", "text": "A superset of JavaScript", "isCorrect": true },
+    { "questionId": "3", "text": "A CSS framework", "isCorrect": false }
+  ]
