@@ -13,8 +13,9 @@
     "client:dev": "cd client && npm run dev",
     "build": "cd server && npm run build",
     "seed": "cd server && npm run seed",
+    "clean": "cd server && npm run clean",
     "render-build": "npm install && npm run build",
-    "cypress": "concurrently \"npm run client:dev\" \"npx cypress open\"",
+    "cypress": "concurrently \"npm run start:dev\" \"npx cypress open\"",
     "test": "npx cypress run --browser electron --headless"
   },
   "keywords": [],

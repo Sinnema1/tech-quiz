@@ -3,17 +3,18 @@ import pythonQuestions from '../../server/src/seeds/pythonQuestions.json';
 describe('Tech Quiz Application', () => {
   context('Quiz Start', () => {
     beforeEach(() => {
-      // Intercept API request for fetching questions
-      cy.intercept('GET', '/api/questions', {
+      // Mock the API request for fetching questions
+      cy.intercept('GET', '/api/questions/random', {
         statusCode: 200,
         body: pythonQuestions,
       }).as('getQuestions');
 
+      // Visit the application
       cy.visit('/');
     });
 
-    it('should display the "Start Quiz" button and load questions on click', () => {
-      // Ensure the start button is visible
+    it('should display the "Start Quiz" button and load the first question on click', () => {
+      // Verify the "Start Quiz" button is visible
       cy.contains('Start Quiz').should('be.visible').click();
 
       // Wait for the API call to complete
@@ -26,61 +27,82 @@ describe('Tech Quiz Application', () => {
 
   context('Quiz Interaction', () => {
     beforeEach(() => {
-      // Mock API and visit page
-      cy.intercept('GET', '/api/questions', {
+      // Mock the API request for fetching questions
+      cy.intercept('GET', '/api/questions/random', {
         statusCode: 200,
         body: pythonQuestions,
       }).as('getQuestions');
 
+      // Visit the application and start the quiz
       cy.visit('/');
       cy.contains('Start Quiz').click();
       cy.wait('@getQuestions');
     });
 
     it('should display the next question after answering the current question', () => {
-      // Answer the first question
-      cy.get('.btn-primary').first().click();
+      pythonQuestions.forEach((question, index) => {
+        // Verify the current question is displayed
+        cy.get('h2').should('contain', question.question);
 
-      // Verify the next question is displayed
-      cy.get('h2').should('contain', pythonQuestions[1].question);
+        // Select the first answer and click
+        cy.get('.btn-primary').first().click();
+
+        // Verify the next question is displayed if it exists
+        if (index < pythonQuestions.length - 1) {
+          cy.get('h2').should('contain', pythonQuestions[index + 1].question);
+        }
+      });
     });
 
     it('should display the score after completing all questions', () => {
-      // Answer all questions
-      for (let i = 0; i < pythonQuestions.length; i++) {
-        cy.get('h2').should('contain', pythonQuestions[i].question);
-        cy.get('.btn-primary').first().click();
-      }
+      let correctAnswers = 0;
 
-      // Verify the score is displayed
-      cy.contains('Your score:').should('be.visible');
-      cy.contains(`Your score: ${pythonQuestions.length}/${pythonQuestions.length}`).should('be.visible');
+      pythonQuestions.forEach((question) => {
+        // Verify the current question
+        cy.get('h2').should('contain', question.question);
+
+        // Check if the first answer is correct and increment the score
+        if (question.answers[0].isCorrect) {
+          correctAnswers++;
+        }
+
+        // Select the first answer
+        cy.get('.btn-primary').first().click();
+      });
+
+      // Verify the score is displayed correctly
+      cy.contains('Quiz Completed').should('be.visible');
+      cy.contains(`Your score: ${correctAnswers}/${pythonQuestions.length}`).should('be.visible');
     });
   });
 
   context('Quiz Restart', () => {
     beforeEach(() => {
-      cy.intercept('GET', '/api/questions', {
+      cy.intercept('GET', '/api/questions/random', {
         statusCode: 200,
         body: pythonQuestions,
       }).as('getQuestions');
 
+      // Visit the application and start the quiz
       cy.visit('/');
       cy.contains('Start Quiz').click();
       cy.wait('@getQuestions');
 
       // Complete the quiz
-      for (let i = 0; i < pythonQuestions.length; i++) {
+      pythonQuestions.forEach(() => {
         cy.get('.btn-primary').first().click();
-      }
+      });
     });
 
-    it('should allow restarting the quiz', () => {
+    it('should restart the quiz and load the first question again', () => {
       // Click the "Take New Quiz" button
       cy.contains('Take New Quiz').click();
 
-      // Verify the quiz resets
-      cy.contains('Start Quiz').should('be.visible');
+      // Wait for the new quiz to load
+      cy.wait('@getQuestions');
+
+      // Verify the first question is displayed again
+      cy.get('h2').should('contain', pythonQuestions[0].question);
     });
   });
 });

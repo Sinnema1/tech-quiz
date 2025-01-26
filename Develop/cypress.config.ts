@@ -9,11 +9,11 @@ export default defineConfig({
       viteConfig: customViteConfig,
     },
     specPattern: "cypress/component/**/*.cy.{js,ts,jsx,tsx}",
-    supportFile: "cypress/support/components.ts",
+    supportFile: "cypress/support/component.ts",
   },
 
   e2e: {
-    baseUrl: 'http://localhost:3000',
+    baseUrl: 'http://127.0.0.1:3001',
     specPattern: "cypress/e2e/**/*.cy.{js,ts,jsx,tsx}", 
     supportFile: "cypress/support/e2e.ts",
     setupNodeEvents(on, config) {

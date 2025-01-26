@@ -1,12 +1,14 @@
 /// <reference types="cypress" />
 
-declare namespace Cypress {
-    interface Chainable<Subject = any> {
-      startQuiz(): Chainable<void>;
-      answerQuestion(index: number): Chainable<void>;
-      restartQuiz(): Chainable<void>;
+declare global {
+    namespace Cypress {
+        interface Chainable<Subject = any> {
+        startQuiz(): Chainable<void>;
+        answerQuestion(index: number): Chainable<void>;
+        restartQuiz(): Chainable<void>;
+        }
     }
-  }
+}
 
 /**
  * Represents an answer to a quiz question
