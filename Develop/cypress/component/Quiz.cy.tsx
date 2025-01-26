@@ -1,28 +1,8 @@
 import React from "react";
 import Quiz from "../../client/src/components/Quiz.js";
 import { mount } from "cypress/react18";
-import { Question } from "../../client/src/models/Question.js";
 import "@testing-library/cypress/add-commands";
-
-// Mock questions data
-const mockQuestions: Question[] = [
-  {
-    _id: "1",
-    question: "What is React?",
-    answers: [
-      { text: "A library", isCorrect: true },
-      { text: "A framework", isCorrect: false },
-    ],
-  },
-  {
-    _id: "2",
-    question: "What is Node.js?",
-    answers: [
-      { text: "A runtime", isCorrect: true },
-      { text: "A database", isCorrect: false },
-    ],
-  },
-];
+import { mockGetQuestions, loadQuestions } from "../support/utils/helpers";
 
 describe("<Quiz />", () => {
   const startQuiz = () => {
@@ -32,11 +12,8 @@ describe("<Quiz />", () => {
   };
 
   beforeEach(() => {
-    // Mock API call
-    cy.intercept("GET", "/api/questions/random", {
-      statusCode: 200,
-      body: mockQuestions,
-    }).as("getQuestions");
+    // Mock API call using helpers
+    mockGetQuestions();
   });
 
   it("renders the initial state with only the Start Quiz button", () => {
@@ -48,23 +25,27 @@ describe("<Quiz />", () => {
 
   it("renders the start button and starts the quiz", () => {
     startQuiz();
-    cy.get("h2").should("contain", mockQuestions[0].question);
+    loadQuestions().then((questions) => {
+      cy.get("h2").should("contain", questions[0].question);
+    });
   });
 
   it("displays the next question when an answer is selected", () => {
     startQuiz();
 
-    mockQuestions.forEach((question, index) => {
-      // Verify the current question
-      cy.get("h2").should("contain", question.question);
+    loadQuestions().then((questions) => {
+      questions.forEach((question, index) => {
+        // Verify the current question
+        cy.get("h2").should("contain", question.question);
 
-      // Click the first answer
-      cy.get("button").contains("1").click();
+        // Click the first answer
+        cy.get("button").contains("1").click();
 
-      // Verify the next question (if exists)
-      if (index < mockQuestions.length - 1) {
-        cy.get("h2").should("contain", mockQuestions[index + 1].question);
-      }
+        // Verify the next question (if exists)
+        if (index < questions.length - 1) {
+          cy.get("h2").should("contain", questions[index + 1].question);
+        }
+      });
     });
   });
 
@@ -72,32 +53,36 @@ describe("<Quiz />", () => {
     startQuiz();
     let score = 0;
 
-    mockQuestions.forEach((question, index) => {
-      cy.get("h2").should("contain", question.question);
+    loadQuestions().then((questions) => {
+      questions.forEach((question) => {
+        cy.get("h2").should("contain", question.question);
 
-      // Select the first answer and increment the score if correct
-      if (question.answers[0].isCorrect) score++;
-      cy.get("button").contains("1").click();
+        // Select the first answer and increment the score if correct
+        if (question.answers[0].isCorrect) score++;
+        cy.get("button").contains("1").click();
+      });
+
+      // Verify the score display
+      cy.contains("Quiz Completed").should("be.visible");
+      cy.contains(`Your score: ${score}/${questions.length}`).should("be.visible");
     });
-
-    // Verify the score display
-    cy.contains("Quiz Completed").should("be.visible");
-    cy.contains(`Your score: ${score}/${mockQuestions.length}`).should("be.visible");
   });
 
   it("allows restarting the quiz after completion", () => {
     startQuiz();
 
-    // Complete the quiz
-    mockQuestions.forEach(() => {
-      cy.get("button").contains("1").click();
+    loadQuestions().then((questions) => {
+      // Complete the quiz
+      questions.forEach(() => {
+        cy.get("button").contains("1").click();
+      });
+
+      // Restart the quiz
+      cy.contains("Take New Quiz").click();
+
+      // Verify the quiz resets
+      cy.get("h2").should("contain", questions[0].question); // First question reloaded
+      cy.contains("Your score:").should("not.exist"); // Score reset
     });
-
-    // Restart the quiz
-    cy.contains("Take New Quiz").click();
-
-    // Verify the quiz resets
-    cy.get("h2").should("contain", mockQuestions[0].question); // First question reloaded
-    cy.contains("Your score:").should("not.exist"); // Score reset
   });
 });
