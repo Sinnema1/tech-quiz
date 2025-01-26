@@ -6,7 +6,6 @@ The Tech Quiz Application is a full-stack web application that allows users to t
 
 ![image](https://github.com/user-attachments/assets/60f1c33f-da7a-488b-83d6-c18af8ac61e6)
 
-
 ## Technologies Used
 
 ### Frontend
@@ -38,33 +37,33 @@ The Tech Quiz Application is a full-stack web application that allows users to t
 1. Clone the repository:
    ```bash
    git clone https://github.com/Sinnema1/tech-quiz.git
-   ```   
-2.	Navigate to the project directory:
+   ```
+2. Navigate to the project directory:
    ```bash
    cd Develop
-   ```   
-3.  Install dependencies for both the client and server:
-    ```bash
-    npm install
-    ```
-4.	Set up environment variables:
-    - Create a .env file in the server directory.
-    - Add the following variables:
-    ```env
-    MONGODB_URI=<your_mongodb_connection_string>
-    ```
-5.	Build the server:
-    ```bash
-    npm run build
-    ```
-6.	Build the client:
-    ```bash
-    npm run client:build
-    ```
-7.	Seed the database (optional):
-    ```bash
-    npm run seed
-    ```
+   ```
+3. Install dependencies for both the client and server:
+   ```bash
+   npm install
+   ```
+4. Set up environment variables:
+   - Create a .env file in the server directory.
+   - Add the following variables:
+   ```env
+   MONGODB_URI=<your_mongodb_connection_string>
+   ```
+5. Build the server:
+   ```bash
+   npm run build
+   ```
+6. Build the client:
+   ```bash
+   npm run client:build
+   ```
+7. Seed the database (optional):
+   ```bash
+   npm run seed
+   ```
 
 ## Usage
 
@@ -125,5 +124,5 @@ This project is licensed under the MIT License.
 ## Questions
 
 - **GitHub**: [Sinnema](https://github.com/Sinnema1/tech-quiz/)
-- **Recording**: [Link]()
+- **Recording**: [Link](https://drive.google.com/file/d/1imYtJ83P203AEIeg8SPe0SwMfSwFwS7z/view?usp=share_link)
 - **Email**: test@test.com
